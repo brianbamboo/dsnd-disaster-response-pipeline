@@ -18,8 +18,31 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
-    pass
-
+    """
+    @param df loaded and merged messages and categories data
+      from load_data() function
+    @return df cleaned dataframe
+    
+    This function is intended to clean up the merged messages
+    and categories data; in particular it handles the 'category'
+    column by splitting it into 36 columns. The original column
+    and duplicate rows from the entire dataset are dropped.
+    """
+    # create a dataframe of the 36 individual category columns
+    categories = df["categories"].str.split(";", expand=True)
+    row = categories[0]
+    category_colnames = row.apply(lambda x: x[:-2])
+    categories.columns = category_colnames
+    for column in categories:
+        # set each value to be the last character of the string
+        categories[column] = categories[column].apply(lambda x: x[-1])
+    
+        # convert column from string to numeric
+        categories[column] = categories[column].apply(lambda x: pd.to_numeric(x))
+    df = df.drop(columns=["categories"])
+    df = pd.concat([df, categories], axis=1)
+    df = df.drop_duplicates()
+    return df
 
 def save_data(df, database_filename):
     pass  
