@@ -45,8 +45,16 @@ def clean_data(df):
     return df
 
 def save_data(df, database_filename):
-    pass  
-
+    """
+    @param df loaded, merged and cleaned dataset to save to database
+    @param database_filename filename of database
+    
+    This function stores the data in a SQLite database, with name specified
+    by parameter database_filename. The table name is DisasterResponseDataTable.
+    """
+    engine = create_engine('sqlite:///{}'.format(database_filename))
+    df.to_sql('DisasterResponseDataTable', engine, index=False, if_exists="replace")
+    return
 
 def main():
     if len(sys.argv) == 4:
