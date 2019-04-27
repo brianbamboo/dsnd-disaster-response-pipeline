@@ -30,7 +30,7 @@ def clean_data(df):
     """
     # create a dataframe of the 36 individual category columns
     categories = df["categories"].str.split(";", expand=True)
-    row = categories[0]
+    row = categories.iloc[0, :]
     category_colnames = row.apply(lambda x: x[:-2])
     categories.columns = category_colnames
     for column in categories:
