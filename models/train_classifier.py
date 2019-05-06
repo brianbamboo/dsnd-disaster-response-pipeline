@@ -2,7 +2,17 @@ import sys
 
 
 def load_data(database_filepath):
-    pass
+    """
+    @param database_filepath filepath to SQLite database
+    @return df loaded SQLite database into pandas DataFrame
+    
+    Given a database fliepath, reads SQLite database into a
+    pandas DataFrame and returns the DataFrame.
+    """
+    engine = create_engine(database_filepath)
+    conn = engine.connect()
+    df = pd.read_sql_table("DisasterResponseDataTable", conn)
+    return df
 
 
 def tokenize(text):
