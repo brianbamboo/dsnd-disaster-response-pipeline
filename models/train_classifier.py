@@ -1,6 +1,5 @@
 import sys
 
-
 def load_data(database_filepath):
     """
     @param database_filepath filepath to SQLite database
@@ -16,7 +15,19 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
-    pass
+    # Normalize case and remove punctuation
+    original = text
+    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
+    
+    # Tokenize text
+    text = word_tokenize(text)
+    
+    # Lemmatize and remove stopwords
+    stop_words = stopwords.words("english")
+    lemmatizer = WordNetLemmatizer()
+    text = [lemmatizer.lemmatize(word) for word in text if word not in stop_words]
+
+    return text
 
 
 def build_model():
