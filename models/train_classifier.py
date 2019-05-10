@@ -5,7 +5,7 @@ def load_data(database_filepath):
     @param database_filepath filepath to SQLite database
     @return df loaded SQLite database into pandas DataFrame
     
-    Given a database fliepath, reads SQLite database into a
+    Given a database filepath, reads SQLite database into a
     pandas DataFrame and returns the DataFrame.
     """
     engine = create_engine(database_filepath)
