@@ -14,6 +14,15 @@ def load_data(database_filepath):
     return df
 
 def tokenize(text):
+    """
+    @param text string to text to process
+    @return text list (str) of tokenized text
+    
+    Given a string of text, this function performs
+    punctuation removal, word tokenization using NLTK,
+    stop word removal and lemmatization using NLTK. The result
+    is returned as a list of strings.
+    """
     # Normalize case and remove punctuation
     original = text
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
