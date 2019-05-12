@@ -1,4 +1,5 @@
 import sys
+import pickle
 
 def load_data(database_filepath):
     """
@@ -60,15 +61,25 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
         return pd.DataFrame(X_tagged)
 
 def build_model():
-    pass
+    """
+    TODO: add docstring
+    """
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    TODO: add docstring
+    """
     pass
 
 
 def save_model(model, model_filepath):
-    pass
+    """
+    TODO: add docstring
+    """
+    with open(model_filepath, 'wb') as f:
+        pickle.dump(model, f, protocol=pickle.HIGHEST_PROTOCOL)
+    return
 
 
 def main():
