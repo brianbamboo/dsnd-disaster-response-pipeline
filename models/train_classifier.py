@@ -1,5 +1,27 @@
+# import libraries
 import sys
+import re
+import pandas as pd
+import nltk
 import pickle
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+from sqlalchemy import create_engine
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import f1_score, precision_score, recall_score, classification_report, accuracy_score
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.base import BaseEstimator, TransformerMixin
 
 def load_data(database_filepath):
     """
