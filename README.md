@@ -14,13 +14,22 @@
 3. Go to http://0.0.0.0:3001/
 
 ## Installations
+Installations required for this include the following Python libraries: (pandas)[https://pandas.pydata.org/], (nltk)[https://www.nltk.org/], (sqlalchemy)[https://www.sqlalchemy.org/], and (scikit-learn)[https://scikit-learn.org/stable/]. This project also uses the sys, re, and pickle Python modules. The app uses (Flask)[http://flask.pocoo.org/] and (Plotly)[https://plot.ly/].
 
 ## Motivation
+The primary motivation for this project was to complete a component of the Udacity Data Scientist Nanodegree. In particular, this component of the course was dedicated to understanding pipelining, including ETL pipelines (done in this project with SQLAlchemy) and machine learning/NLP pipelines (done in this project with sklearn).
 
 ## File Descriptions
+There are three directories in this repo:
+- /app - contains files related to the Flask app
+- /data - contains raw data files and files related to the data processing/ETL pipeline
+- /models - contains files related to model training
 
 ## Summary
+***TO DO*** This project is still in progress - a summary will be added once it's complete!
 
 ## Authors
+The author of most of the repo content is me! Data provided by Figure Eight, linked below in the acknowledgements. Starter code for this project and the repo was provided as part of the Udacity Data Scientist Nanodegree - this includes most of the boilerplate code in the /app directory, as Flask/front-end development was not a focus of this project.
 
 ## Acknowledgements
+Thanks to (Figure Eight)[https://www.figure-eight.com/] for providing the data as a Udacity partner, and thanks to Udacity for including this project as a part of their Data Scientist Nanodegree. I got some cool experience learning about pipelines in SQLAlchemy and scikit-learn.
