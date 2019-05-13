@@ -14,7 +14,7 @@
 3. Go to http://0.0.0.0:3001/
 
 ## Installations
-Installations required for this include the following Python libraries: (pandas)[https://pandas.pydata.org/], (nltk)[https://www.nltk.org/], (sqlalchemy)[https://www.sqlalchemy.org/], and (scikit-learn)[https://scikit-learn.org/stable/]. This project also uses the sys, re, and pickle Python modules. The app uses (Flask)[http://flask.pocoo.org/] and (Plotly)[https://plot.ly/].
+Installations required for this include the following Python libraries: [pandas](https://pandas.pydata.org/), [nltk](https://www.nltk.org/), [sqlalchemy](https://www.sqlalchemy.org/), and [scikit-learn](https://scikit-learn.org/stable/). This project also uses the sys, re, and pickle Python modules. The app uses [Flask](http://flask.pocoo.org/) and [Plotly](https://plot.ly/).
 
 ## Motivation
 The primary motivation for this project was to complete a component of the Udacity Data Scientist Nanodegree. In particular, this component of the course was dedicated to understanding pipelining, including ETL pipelines (done in this project with SQLAlchemy) and machine learning/NLP pipelines (done in this project with sklearn).
