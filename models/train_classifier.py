@@ -90,7 +90,12 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
 
 def build_model():
     """
-    TODO: add docstring
+    @return cv GridSearchCV object
+    
+    Thie function defines the ML pipeline and a grid of 
+    pipeline parameters to perform a grid search cross validation
+    process over. Initializes and returns a scikit-learn
+    GridSearchCV object with the pipeline and parameter grid.
     """
     # Define pipeline
     pipeline = Pipeline([
@@ -105,8 +110,9 @@ def build_model():
             RandomForestClassifier()
         )))
     ])
-    # TO COMPLETE: ADD CROSS VALIDATION
-    return
+    # TO COMPLETE: ADD GRID SEARCH CROSS VALIDATION
+    # currently implemented without cv just to test basic script functionality 
+    return pipeline
 
 def evaluate_model(model, X_test, Y_test, category_names):
     """
