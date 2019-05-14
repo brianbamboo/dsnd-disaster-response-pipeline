@@ -20,10 +20,11 @@ Installations required for this include the following Python libraries: [pandas]
 The primary motivation for this project was to complete a component of the Udacity Data Scientist Nanodegree. In particular, this component of the course was dedicated to understanding pipelining, including ETL pipelines (done in this project with SQLAlchemy) and machine learning/NLP pipelines (done in this project with sklearn).
 
 ## File Descriptions
-There are three directories in this repo:
+There are four directories in this repo:
 - /app - contains files related to the Flask app
 - /data - contains raw data files and files related to the data processing/ETL pipeline
 - /models - contains files related to model training
+- /notebooks - contains Jupyter notebooks (and related files) used in preparation of the pipelines
 
 ## Summary
 ***TO DO*** This project is still in progress - a summary will be added once it's complete!
