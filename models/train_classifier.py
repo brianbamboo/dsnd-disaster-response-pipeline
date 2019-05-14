@@ -26,15 +26,21 @@ from sklearn.base import BaseEstimator, TransformerMixin
 def load_data(database_filepath):
     """
     @param database_filepath filepath to SQLite database
-    @return df loaded SQLite database into pandas DataFrame
+    @return X array/vector of message data
+    @return Y 0/1 matrix of multi-response data
+    @return category_names names of each category, for use in evaluation
     
     Given a database filepath, reads SQLite database into a
-    pandas DataFrame and returns the DataFrame.
+    pandas DataFrame and returns raw messsage data, response matrix
+    and category names.
     """
     engine = create_engine(database_filepath)
     conn = engine.connect()
     df = pd.read_sql_table("DisasterResponseDataTable", conn)
-    return df
+    X = df.loc[:, "message"]
+    Y = df.iloc[:, 4:]
+    category_names = Y.columns
+    return X, Y, category_names
 
 def tokenize(text):
     """
@@ -86,14 +92,27 @@ def build_model():
     """
     TODO: add docstring
     """
+    # Define pipeline
+    pipeline = Pipeline([
+        ('features', FeatureUnion([
+                ('text_pipeline', Pipeline([
+                    ('vect', CountVectorizer(tokenizer=tokenize)),
+                    ('tfidf', TfidfTransformer())
+                ])),
+                ('starting_verb', StartingVerbExtractor())
+            ])),
+        ('clf', MultiOutputClassifier(estimator=OneVsRestClassifier(
+            RandomForestClassifier()
+        )))
+    ])
+    # TO COMPLETE: ADD CROSS VALIDATION
+    return
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
     """
     TODO: add docstring
     """
-    pass
-
 
 def save_model(model, model_filepath):
     """
