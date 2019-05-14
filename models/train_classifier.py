@@ -108,20 +108,25 @@ def build_model():
     # TO COMPLETE: ADD CROSS VALIDATION
     return
 
-
 def evaluate_model(model, X_test, Y_test, category_names):
     """
     TODO: add docstring
     """
+    pass
 
 def save_model(model, model_filepath):
     """
-    TODO: add docstring
+    @param model prediction model (i.e. object returned from 
+      build_model function)
+    @param model_filepath filepath to save the pickled model to
+    
+    Given a model (classifier) object, pickles the model
+    and writes the result to model_filepath. This function
+    does not return anything.
     """
     with open(model_filepath, 'wb') as f:
         pickle.dump(model, f, protocol=pickle.HIGHEST_PROTOCOL)
     return
-
 
 def main():
     if len(sys.argv) == 3:
