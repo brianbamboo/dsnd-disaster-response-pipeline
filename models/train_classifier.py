@@ -69,6 +69,14 @@ def tokenize(text):
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
 
     def starting_verb(self, text):
+        """
+        @param text string of text to examine
+        @return True/False if text starts with a verb or not
+        
+        Given a string of text, returns True/False if the text
+        starts with a verb using nltk's pos_tag (part-of-speech
+        tagger).
+        """
         sentence_list = nltk.sent_tokenize(text)
         for sentence in sentence_list:
             pos_tags = nltk.pos_tag(tokenize(sentence))
