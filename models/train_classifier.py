@@ -34,7 +34,7 @@ def load_data(database_filepath):
     pandas DataFrame and returns raw messsage data, response matrix
     and category names.
     """
-    engine = create_engine(database_filepath)
+    engine = create_engine("sqlite:///{}".format(database_filepath))
     conn = engine.connect()
     df = pd.read_sql_table("DisasterResponseDataTable", conn)
     X = df.loc[:, "message"]
