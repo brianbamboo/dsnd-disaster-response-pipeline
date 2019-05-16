@@ -135,14 +135,15 @@ def evaluate_model(model, X_test, Y_test, category_names):
         print(classification_report(Y_test.iloc[:, i], Y_preds[:, i]))
         
     # Evaluate overall
+    avg_type = ['micro', 'macro', 'weighted']
     acc = accuracy_score(Y_test, Y_preds)
-    prec = precision_score(Y_test, Y_preds, average="weighted")
-    recall = recall_score(Y_test, Y_preds, average="weighted")
-    f1 = f1_score(Y_test, Y_preds, average="weighted")
-    print("Overall accuracy: {}".format(acc))
-    print("Overall precision: {}".format(prec))
-    print("Overall recall: {}".format(recall))
-    print("Overall F1 score: {}".format(f1))
+    prec = [precision_score(Y_test, Y_preds, average=x) for x in avg_type]
+    recall = [recall_score(Y_test, Y_preds, average=x) for x in avg_type]
+    f1 = [f1_score(Y_test, Y_preds, average=x) for x in avg_type]
+    print("Overall accuracy: {0:.2f}".format(acc))
+    print("Micro/macro/weighted precision: {:.2f} / {:.2f} / {:.2f}".format(prec[0], prec[1], prec[2]))
+    print("Micro/macro/weighted recall: {:.2f} / {:.2f} / {:.2f}".format(recall[0], recall[1], recall[2]))
+    print("Micro/macro/weighted F1 score: {:.2f} / {:.2f} / {:.2f} ".format(f1[0], f1[1], f1[2]))
     return
 
 def save_model(model, model_filepath):
