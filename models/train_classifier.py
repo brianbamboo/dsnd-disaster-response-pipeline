@@ -126,7 +126,24 @@ def evaluate_model(model, X_test, Y_test, category_names):
     """
     TODO: add docstring
     """
-    pass
+    Y_preds = model.predict(X_test)
+    
+    # Evaluate each category
+    for i in range(Y_test.shape[1]):
+        print("CATEGORY: {}".format(category_names[i]))
+        print("-------------")
+        print(classification_report(Y_test.iloc[:, i], Y_preds[:, i]))
+        
+    # Evaluate overall
+    acc = accuracy_score(Y_test, Y_preds)
+    prec = precision_score(Y_test, Y_preds, average="weighted")
+    recall = recall_score(Y_test, Y_preds, average="weighted")
+    f1 = f1_score(Y_test, Y_preds, average="weighted")
+    print("Overall accuracy: {}".format(acc))
+    print("Overall precision: {}".format(prec))
+    print("Overall recall: {}".format(recall))
+    print("Overall F1 score: {}".format(f1))
+    return
 
 def save_model(model, model_filepath):
     """
