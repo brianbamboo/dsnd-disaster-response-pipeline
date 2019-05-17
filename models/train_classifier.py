@@ -14,7 +14,7 @@ from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 from sqlalchemy import create_engine
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import f1_score, precision_score, recall_score, classification_report, accuracy_score
+from sklearn.metrics import f1_score, fbeta_score, precision_score, recall_score, classification_report, accuracy_score, make_scorer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -119,12 +119,40 @@ def build_model():
         )))
     ])
     # TO COMPLETE: ADD GRID SEARCH CROSS VALIDATION
+    parameters = {
+        #'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),   (1, 1)
+        #'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),        (0.75)
+        #'features__text_pipeline__vect__max_features': (None, 5000, 10000), (5000)
+        #'features__text_pipeline__tfidf__use_idf': (True, False), (True)
+        'clf__estimator__estimator__n_estimators': [100, 150, 200],
+        #'clf__estimator__estimator__min_samples_split': [2, 10, 25, 50] (10)
+        #'features__transformer_weights': (
+        #    {'text_pipeline': 1, 'starting_verb': 0.5},
+        #    {'text_pipeline': 0.5, 'starting_verb': 1},
+        #    {'text_pipeline': 0.8, 'starting_verb': 1},
+        #)
+    }
+    
+    # Weight 
+    f_scorer = make_scorer(fbeta_score, beta=4, average="macro")
+    cv = GridSearchCV(pipeline, param_grid=parameters, scoring=f_scorer)
     # currently implemented without cv just to test basic script functionality 
-    return pipeline
+    return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
     """
-    TODO: add docstring
+    @param model model to predict responses with
+    @param X_test numpy array containing test features to 
+      predict responses with
+    @param Y_test numpy array containing true test response 
+      data (multi-classification)
+    @param category_names numpy array containing column names
+      of Y_test, used for the classification report output
+    
+    Given a model, test data and test response (multi-classification) 
+    data, calls the classification_report function on each category,
+    then computes combined accuracy/precision/recall/f-scores. Precision,
+    recall, and F-scores are reported using three methods.
     """
     Y_preds = model.predict(X_test)
     
@@ -140,10 +168,14 @@ def evaluate_model(model, X_test, Y_test, category_names):
     prec = [precision_score(Y_test, Y_preds, average=x) for x in avg_type]
     recall = [recall_score(Y_test, Y_preds, average=x) for x in avg_type]
     f1 = [f1_score(Y_test, Y_preds, average=x) for x in avg_type]
+    f4 = [fbeta_score(Y_test, Y_preds, average=x, beta=4) for x in avg_type]
     print("Overall accuracy: {0:.2f}".format(acc))
     print("Micro/macro/weighted precision: {:.2f} / {:.2f} / {:.2f}".format(prec[0], prec[1], prec[2]))
     print("Micro/macro/weighted recall: {:.2f} / {:.2f} / {:.2f}".format(recall[0], recall[1], recall[2]))
     print("Micro/macro/weighted F1 score: {:.2f} / {:.2f} / {:.2f} ".format(f1[0], f1[1], f1[2]))
+    
+    # F4-score is reported, since we particularly care about recall
+    print("Micro/macro/weighted F4 score: {:.2f} / {:.2f} / {:.2f} ".format(f4[0], f4[1], f4[2]))
     return
 
 def save_model(model, model_filepath):
@@ -172,6 +204,8 @@ def main():
         
         print('Training model...')
         model.fit(X_train, Y_train)
+        
+        print("\nBest Parameters:", model.best_params_, "\n")
         
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
