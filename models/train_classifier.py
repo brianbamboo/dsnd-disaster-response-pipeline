@@ -59,25 +59,31 @@ def build_model():
         )))
     ])
 
-    #parameters = {
-        #'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),     # (1, 1)
-        #'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),          # (0.75)
-        #'features__text_pipeline__vect__max_features': (None, 5000, 10000), # (5000)
-        #'features__text_pipeline__tfidf__use_idf': (True, False),           # (True)
-        #'clf__estimator__estimator__n_estimators': [100, 150, 200],         # (200)
-        #'clf__estimator__estimator__min_samples_split': [2, 10, 25, 50]     # (10)
-        #'features__transformer_weights': (                                   # 0.8, 1
-            # {'text_pipeline': 1, 'starting_verb': 0.5},
-            # {'text_pipeline': 0.5, 'starting_verb': 1},
-            #{'text_pipeline': 0.8, 'starting_verb': 1}
-        #) 
-    #}
+    print("\nNOTE: Grid search may take a very long time to fully execute. The pipeline has been "
+        "initialized with some starting parameters from previous attempts but the user may "
+        "want to consider manually altering the grid search parameters so the execution time "
+        "is more manageable. The verbosity setting of the classifier has been set to 1 so the "
+        "user can see the progress of the training process.\n")
+
+    parameters = {
+        'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),      
+        'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),           
+        'features__text_pipeline__vect__max_features': (None, 5000, 10000),  
+        'features__text_pipeline__tfidf__use_idf': (True, False),            
+        'clf__estimator__estimator__n_estimators': [100, 150, 200],          
+        'clf__estimator__estimator__min_samples_split': [2, 10, 25, 50],      
+        'features__transformer_weights': (
+             {'text_pipeline': 1, 'starting_verb': 0.5},
+             {'text_pipeline': 0.5, 'starting_verb': 1},
+             {'text_pipeline': 0.8, 'starting_verb': 1}
+        ) 
+    }
     
     # Weight 
-    # f_scorer = make_scorer(fbeta_score, beta=4, average="macro")
-    # cv = GridSearchCV(pipeline, param_grid=parameters, scoring=f_scorer)
+    f_scorer = make_scorer(fbeta_score, beta=4, average="macro")
+    cv = GridSearchCV(pipeline, param_grid=parameters, scoring=f_scorer)
  
-    return pipeline
+    return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
     """
@@ -145,7 +151,7 @@ def main():
         print('Training model...')
         model.fit(X_train, Y_train)
         
-        # print("\nBest Parameters:", model.best_params_, "\n")
+        print("\nBest Parameters:", model.best_params_, "\n")
         
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
