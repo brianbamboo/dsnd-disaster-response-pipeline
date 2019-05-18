@@ -62,4 +62,4 @@ Model performance:
 The author of most of the repo content is me! Data provided by Figure Eight, linked below in the acknowledgements. Starter code for this project and the repo was provided as part of the Udacity Data Scientist Nanodegree - this includes most of the boilerplate code in the /app directory, as Flask/front-end development was not a focus of this project.
 
 ## Acknowledgements
-Thanks to (Figure Eight)[https://www.figure-eight.com/] for providing the data as a Udacity partner, and thanks to Udacity for including this project as a part of their Data Scientist Nanodegree. I got some cool experience learning about pipelines in SQLAlchemy and scikit-learn.
+Thanks to [Figure Eight](https://www.figure-eight.com/) for providing the data as a Udacity partner, and thanks to Udacity for including this project as a part of their Data Scientist Nanodegree. I got some cool experience learning about pipelines in SQLAlchemy and scikit-learn.
