@@ -1,6 +1,7 @@
 import json
 import plotly
 import pandas as pd
+import numpy as np
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -28,6 +29,7 @@ def tokenize(text):
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('DisasterResponseDataTable', engine)
+Y = df.iloc[:, 4:]
 
 # load model
 model = joblib.load("../models/classifier.pkl")
@@ -39,12 +41,10 @@ model = joblib.load("../models/classifier.pkl")
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
@@ -60,11 +60,48 @@ def index():
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "Genre",
+                    "titlefont": {"size": 14},
+                    "tickfont": {"size": 14}
                 }
             }
         }
     ]
+
+    # Visualization of number of positive examples in each category
+    category_names = Y.columns
+    category_pos_counts = Y.sum(axis=0)
+    graph_two = {}
+    graph_two["data"] = [Bar(x = category_names, y = category_pos_counts.values)]
+    graph_two["layout"] = {
+      "title": "Number of positive examples in each category", 
+      "yaxis": {
+        "title": "Count"
+      },
+      "xaxis": {
+        "title": "Category",
+        "titlefont": {"size": 14},
+        "tickfont": {"size": 8}
+      }
+    }
+
+    # Visualization of imbalance in each category
+    category_imb = np.abs(category_pos_counts / Y.shape[0] - 0.5).sort_values(ascending=False)
+    graph_three = {}
+    graph_three["data"] = [Bar(x = category_imb.index, y = category_imb.values)]
+    graph_three["layout"] = {
+      "title": "Degree of imbalance in each category",
+      "yaxis": {
+        "title": "Absolute difference of category proportion from 0.5"
+      },
+      "xaxis": {
+        "title": "Category",
+        "titlefont": {"size": 14},
+        "tickfont": {"size": 8}
+      }
+    }
+
+    graphs.extend([graph_two, graph_three])
     
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
