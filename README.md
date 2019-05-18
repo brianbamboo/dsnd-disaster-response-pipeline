@@ -26,6 +26,22 @@ There are four directories in this repo:
 - /models - contains files related to model training
 - /notebooks - contains Jupyter notebooks (and related files) used in preparation of the pipelines
 
+## Dataset
+The dataset consists of 26248 messages, originally in French, that were communicated in an emergency.
+Additionally, we have categories for each message, where each message has been classified as relating
+or not relating to any of 36 categories. Examples of categories include `request`, `offer`, `aid_related`,
+etc. The goal is to use each message and decide, for each of the 36 categories, which ones they are or 
+aren't related to.
+
+### Dataset Imbalance
+This dataset is imbalanced, where some categories have relatively few positive examples. This affects
+model training in that the model will learn much more successfully how to classify negative examples,
+but for some categories, struggle to have high recall. This problem was attempted to be handled by
+weighting recall more heavily in the cross-validation scoring; in particular, we used the F4 score to
+evaluate models, which means that recall was 4 times more important than precision in the score. Using
+this criteria, the model training then focused heavily on trying to identify true positives, which is 
+reflected in the model scores.
+
 ## Summary
 ***TO DO*** This project is still in progress - a summary will be added once it's complete!
 
