@@ -55,7 +55,7 @@ def build_model():
                 ('starting_verb', StartingVerbExtractor())
             ])),
         ('clf', MultiOutputClassifier(estimator=OneVsRestClassifier(
-            RandomForestClassifier(n_estimators=200, min_samples_split=10, verbose=1, max_depth=5)
+            RandomForestClassifier(n_estimators=200, min_samples_split=10, verbose=1, n_jobs=-1)
         )))
     ])
 
