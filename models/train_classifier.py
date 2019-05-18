@@ -1,17 +1,8 @@
 # import libraries
 import sys
-import re
 import pandas as pd
-import nltk
 import pickle
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('averaged_perceptron_tagger')
-from nltk.corpus import stopwords
-from nltk.stem.wordnet import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
-from nltk import pos_tag
+from StartingVerbExtractor import StartingVerbExtractor
 from sqlalchemy import create_engine
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import f1_score, fbeta_score, precision_score, recall_score, classification_report, accuracy_score, make_scorer
@@ -21,7 +12,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-from sklearn.base import BaseEstimator, TransformerMixin
+from train_classifier_helper import tokenize
 
 def load_data(database_filepath):
     """
@@ -42,60 +33,6 @@ def load_data(database_filepath):
     category_names = Y.columns
     return X, Y, category_names
 
-def tokenize(text):
-    """
-    @param text string to text to process
-    @return text list (str) of tokenized text
-    
-    Given a string of text, this function performs
-    punctuation removal, word tokenization using NLTK,
-    stop word removal and lemmatization using NLTK. The result
-    is returned as a list of strings.
-    """
-    # Normalize case and remove punctuation
-    original = text
-    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
-    
-    # Tokenize text
-    text = word_tokenize(text)
-    
-    # Lemmatize and remove stopwords
-    stop_words = stopwords.words("english")
-    lemmatizer = WordNetLemmatizer()
-    text = [lemmatizer.lemmatize(word) for word in text if word not in stop_words]
-
-    return text
-
-class StartingVerbExtractor(BaseEstimator, TransformerMixin):
-
-    def starting_verb(self, text):
-        """
-        @param text string of text to examine
-        @return True/False if text starts with a verb or not
-        
-        Given a string of text, returns True/False if the text
-        starts with a verb using nltk's pos_tag (part-of-speech
-        tagger).
-        """
-        sentence_list = nltk.sent_tokenize(text)
-        for sentence in sentence_list:
-            pos_tags = nltk.pos_tag(tokenize(sentence))
-            
-            if len(pos_tags) == 0:
-                return False
-            
-            first_word, first_tag = pos_tags[0]
-            if first_tag in ['VB', 'VBP'] or first_word == 'RT':
-                return True
-        return False
-
-    def fit(self, x, y=None):
-        return self
-
-    def transform(self, X):
-        X_tagged = pd.Series(X).apply(self.starting_verb)
-        return pd.DataFrame(X_tagged)
-
 def build_model():
     """
     @return cv GridSearchCV object
@@ -109,35 +46,38 @@ def build_model():
     pipeline = Pipeline([
         ('features', FeatureUnion([
                 ('text_pipeline', Pipeline([
-                    ('vect', CountVectorizer(tokenizer=tokenize)),
-                    ('tfidf', TfidfTransformer())
+                    ('vect', CountVectorizer(tokenizer=tokenize,
+                        ngram_range=(1, 1),
+                        max_df=0.75,
+                        max_features=5000)),
+                    ('tfidf', TfidfTransformer(use_idf=True))
                 ])),
                 ('starting_verb', StartingVerbExtractor())
             ])),
         ('clf', MultiOutputClassifier(estimator=OneVsRestClassifier(
-            RandomForestClassifier()
+            RandomForestClassifier(n_estimators=200, min_samples_split=10, verbose=1, max_depth=5)
         )))
     ])
-    # TO COMPLETE: ADD GRID SEARCH CROSS VALIDATION
-    parameters = {
-        #'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),   (1, 1)
-        #'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),        (0.75)
-        #'features__text_pipeline__vect__max_features': (None, 5000, 10000), (5000)
-        #'features__text_pipeline__tfidf__use_idf': (True, False), (True)
-        'clf__estimator__estimator__n_estimators': [100, 150, 200],
-        #'clf__estimator__estimator__min_samples_split': [2, 10, 25, 50] (10)
-        #'features__transformer_weights': (
-        #    {'text_pipeline': 1, 'starting_verb': 0.5},
-        #    {'text_pipeline': 0.5, 'starting_verb': 1},
-        #    {'text_pipeline': 0.8, 'starting_verb': 1},
-        #)
-    }
+
+    #parameters = {
+        #'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),     # (1, 1)
+        #'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),          # (0.75)
+        #'features__text_pipeline__vect__max_features': (None, 5000, 10000), # (5000)
+        #'features__text_pipeline__tfidf__use_idf': (True, False),           # (True)
+        #'clf__estimator__estimator__n_estimators': [100, 150, 200],         # (200)
+        #'clf__estimator__estimator__min_samples_split': [2, 10, 25, 50]     # (10)
+        #'features__transformer_weights': (                                   # 0.8, 1
+            # {'text_pipeline': 1, 'starting_verb': 0.5},
+            # {'text_pipeline': 0.5, 'starting_verb': 1},
+            #{'text_pipeline': 0.8, 'starting_verb': 1}
+        #) 
+    #}
     
     # Weight 
-    f_scorer = make_scorer(fbeta_score, beta=4, average="macro")
-    cv = GridSearchCV(pipeline, param_grid=parameters, scoring=f_scorer)
-    # currently implemented without cv just to test basic script functionality 
-    return cv
+    # f_scorer = make_scorer(fbeta_score, beta=4, average="macro")
+    # cv = GridSearchCV(pipeline, param_grid=parameters, scoring=f_scorer)
+ 
+    return pipeline
 
 def evaluate_model(model, X_test, Y_test, category_names):
     """
@@ -205,7 +145,7 @@ def main():
         print('Training model...')
         model.fit(X_train, Y_train)
         
-        print("\nBest Parameters:", model.best_params_, "\n")
+        # print("\nBest Parameters:", model.best_params_, "\n")
         
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
