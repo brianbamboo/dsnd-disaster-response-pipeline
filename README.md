@@ -30,17 +30,17 @@ There are four directories in this repo:
 ***TO DO*** This project is still in progress - a summary will be added once it's complete!
 
 Baseline performance (random forest classifier with default parameters)
-Overall accuracy: 0.25
-Micro/macro/weighted precision: 0.81 / 0.55 / 0.74
-Micro/macro/weighted recall: 0.48 / 0.18 / 0.48
-Micro/macro/weighted F1 score: 0.60 / 0.23 / 0.54
+- Overall accuracy: 0.25
+- Micro/macro/weighted precision: 0.81 / 0.55 / 0.74
+- Micro/macro/weighted recall: 0.48 / 0.18 / 0.48
+- Micro/macro/weighted F1 score: 0.60 / 0.23 / 0.54
 
 Model performance:
-Overall accuracy: 0.28
-Micro/macro/weighted precision: 0.81 / 0.57 / 0.75
-Micro/macro/weighted recall: 0.57 / 0.25 / 0.57
-Micro/macro/weighted F1 score: 0.67 / 0.30 / 0.60 
-Micro/macro/weighted F4 score: 0.58 / 0.25 / 0.57
+- Overall accuracy: 0.28
+- Micro/macro/weighted precision: 0.81 / 0.57 / 0.75
+- Micro/macro/weighted recall: 0.57 / 0.25 / 0.57
+- Micro/macro/weighted F1 score: 0.67 / 0.30 / 0.60 
+- Micro/macro/weighted F4 score: 0.58 / 0.25 / 0.57
 
 ## Authors
 The author of most of the repo content is me! Data provided by Figure Eight, linked below in the acknowledgements. Starter code for this project and the repo was provided as part of the Udacity Data Scientist Nanodegree - this includes most of the boilerplate code in the /app directory, as Flask/front-end development was not a focus of this project.
