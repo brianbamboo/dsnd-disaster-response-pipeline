@@ -44,7 +44,8 @@ but for some categories, struggle to have high recall. This problem was attempte
 weighting recall more heavily in the cross-validation scoring; in particular, we used the F4 score to
 evaluate models, which means that recall was 4 times more important than precision in the score. Using
 this criteria, the model training then focused heavily on trying to identify true positives, which is 
-reflected in the model scores.
+reflected in the model scores. In addition to this, class weights were treated as balanced in the training
+process.
 
 ### Data Cleaning
 Data cleaning focused primarily on the response data, which was provided in a semicolon-delimited string format, e.g.
@@ -54,7 +55,7 @@ Data cleaning focused primarily on the response data, which was provided in a se
 Data transformation focused primarily on text processing of the message into a numeric format suitable for model training. Message text underwent tokenization, stop word removal and lemmatization. Lemmatized text was then converted into a count vector, and finally into TF-IDF vector format.
 
 ### Data Modeling
-The classifier used was sklearn `RandomForestClassifier`. 
+The classifier used was sklearn `RandomForestClassifier`. Since this is a multilabel classification problem, the classifier was wrapped using `OneVsRestClassifier` and `MultiOutputClassifier`. Parameters were determined using grid search.
 
 ## Summary
 Baseline performance (random forest classifier with default parameters)
