@@ -1,5 +1,7 @@
 # Disaster Response Pipeline Project
 
+An instance of this app has been deployed on [Heroku](https://dsnd-disaster-dashboard.herokuapp.com/).
+
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 
