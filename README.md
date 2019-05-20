@@ -35,8 +35,6 @@ or not relating to any of 36 categories. Examples of categories include `request
 etc. The goal is to use each message and decide, for each of the 36 categories, which ones they are or 
 aren't related to.
 
-Go into more detail about the dataset and your data cleaning and modeling process in your README file, add screenshots of your web app and model results.
-
 ### Dataset Imbalance
 This dataset is imbalanced, where some categories have relatively few positive examples. This affects
 model training in that the model will learn much more successfully how to classify negative examples,
