@@ -56,7 +56,8 @@ def build_model():
                 ('starting_verb', StartingVerbExtractor())
             ])),
         ('clf', MultiOutputClassifier(estimator=OneVsRestClassifier(
-            RandomForestClassifier(n_estimators=2, min_samples_split=10, verbose=1, n_jobs=-1)
+            RandomForestClassifier(n_estimators=15, min_samples_split=10, verbose=1, n_jobs=-1,
+                class_weight="balanced")
         )))
     ])
 
@@ -71,8 +72,8 @@ def build_model():
         'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),           
         'features__text_pipeline__vect__max_features': (None, 5000, 10000),  
         'features__text_pipeline__tfidf__use_idf': (True, False),            
-        'clf__estimator__estimator__n_estimators': [100, 150, 200],          
-        'clf__estimator__estimator__min_samples_split': [2, 10, 25, 50],      
+        'clf__estimator__estimator__n_estimators': [15],          
+        'clf__estimator__estimator__min_samples_split': [2, 10, 25],      
         'features__transformer_weights': (
              {'text_pipeline': 1, 'starting_verb': 0.5},
              {'text_pipeline': 0.5, 'starting_verb': 1},
