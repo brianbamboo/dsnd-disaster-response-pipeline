@@ -35,6 +35,8 @@ or not relating to any of 36 categories. Examples of categories include `request
 etc. The goal is to use each message and decide, for each of the 36 categories, which ones they are or 
 aren't related to.
 
+Go into more detail about the dataset and your data cleaning and modeling process in your README file, add screenshots of your web app and model results.
+
 ### Dataset Imbalance
 This dataset is imbalanced, where some categories have relatively few positive examples. This affects
 model training in that the model will learn much more successfully how to classify negative examples,
@@ -44,9 +46,17 @@ evaluate models, which means that recall was 4 times more important than precisi
 this criteria, the model training then focused heavily on trying to identify true positives, which is 
 reflected in the model scores.
 
-## Summary
-***TO DO*** This project is still in progress - a summary will be added once it's complete!
+### Data Cleaning
+Data cleaning focused primarily on the response data, which was provided in a semicolon-delimited string format, e.g.
+"related-0;request-0;offer-1...". Strings were parsed into a dataframe format, and erroneous values were recoded.
 
+### Data Transformation
+Data transformation focused primarily on text processing of the message into a numeric format suitable for model training. Message text underwent tokenization, stop word removal and lemmatization. Lemmatized text was then converted into a count vector, and finally into TF-IDF vector format.
+
+### Data Modeling
+The classifier used was sklearn `RandomForestClassifier`. 
+
+## Summary
 Baseline performance (random forest classifier with default parameters)
 - Overall accuracy: 0.25
 - Micro/macro/weighted precision: 0.81 / 0.55 / 0.74
