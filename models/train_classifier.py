@@ -11,6 +11,7 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.externals import joblib
 from sklearn.svm import SVC
 from train_classifier_helper import tokenize
 
@@ -55,7 +56,7 @@ def build_model():
                 ('starting_verb', StartingVerbExtractor())
             ])),
         ('clf', MultiOutputClassifier(estimator=OneVsRestClassifier(
-            RandomForestClassifier(n_estimators=200, min_samples_split=10, verbose=1, n_jobs=-1)
+            RandomForestClassifier(n_estimators=2, min_samples_split=10, verbose=1, n_jobs=-1)
         )))
     ])
 
@@ -81,7 +82,7 @@ def build_model():
     
     # Weight 
     f_scorer = make_scorer(fbeta_score, beta=4, average="macro")
-    cv = GridSearchCV(pipeline, param_grid=parameters, scoring=f_scorer)
+    cv = GridSearchCV(pipeline, param_grid=parameters, scoring=f_scorer, verbose=9)
  
     return cv
 
@@ -134,8 +135,7 @@ def save_model(model, model_filepath):
     and writes the result to model_filepath. This function
     does not return anything.
     """
-    with open(model_filepath, 'wb') as f:
-        pickle.dump(model, f, protocol=pickle.HIGHEST_PROTOCOL)
+    joblib.dump(model,  model_filepath, compress=9)
     return
 
 def main():
